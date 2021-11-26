@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:retry_my_own_flashcards/parts/button_with_icon.dart';
+import 'package:retry_my_own_flashcards/screens/test_screen.dart';
+import 'package:retry_my_own_flashcards/screens/word_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -7,7 +9,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isIncludedMemorizedWord = false;
+  bool isIncludedMemorizedWords = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 30.0,
             ),
             ButtonWithIcon(
-              onPressed: () => print("かくにんテスト"),
+              onPressed: () => _startTestScreen(context),
               icon: const Icon(Icons.play_arrow),
               label: "かくにんテストをする",
               color: Colors.brown,
@@ -35,12 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10.0,
             ),
-            _radioButons(),
+            _radioButtons(),
             const SizedBox(
               height: 30.0,
             ),
             ButtonWithIcon(
-              onPressed: () => print("単語一覧"),
+              onPressed: () => _startWordListScreen(context),
               icon: const Icon(Icons.list),
               label: "単語一覧を見る",
               color: Colors.grey,
@@ -81,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _radioButons() {
+  Widget _radioButtons() {
     return Padding(
       padding: const EdgeInsets.only(left: 50.0),
       child: Column(
@@ -92,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(fontSize: 16.0),
             ),
             value: false,
-            groupValue: isIncludedMemorizedWord,
+            groupValue: isIncludedMemorizedWords,
             onChanged: (value) => _onRadioSelected(value),
           ),
           RadioListTile(
@@ -101,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(fontSize: 16.0),
             ),
             value: true,
-            groupValue: isIncludedMemorizedWord,
+            groupValue: isIncludedMemorizedWords,
             onChanged: (value) => _onRadioSelected(value),
           ),
         ],
@@ -112,8 +114,24 @@ class _HomeScreenState extends State<HomeScreen> {
   _onRadioSelected(value) {
     setState(
       () {
-        isIncludedMemorizedWord = value;
+        isIncludedMemorizedWords = value;
       },
+    );
+  }
+
+  _startWordListScreen(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => WordListScreen()));
+  }
+
+  _startTestScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TestScreen(
+          isIncludedMemorizedWords: isIncludedMemorizedWords,
+        ),
+      ),
     );
   }
 }
