@@ -7,6 +7,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isIncludedMemorizedWord = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,11 +23,21 @@ class _HomeScreenState extends State<HomeScreen> {
               indent: 8.0,
               endIndent: 8.0,
             ),
+            const SizedBox(
+              height: 30.0,
+            ),
             ButtonWithIcon(
               onPressed: () => print("かくにんテスト"),
               icon: const Icon(Icons.play_arrow),
               label: "かくにんテストをする",
               color: Colors.brown,
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            _radioButons(),
+            const SizedBox(
+              height: 30.0,
             ),
             ButtonWithIcon(
               onPressed: () => print("単語一覧"),
@@ -33,9 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
               label: "単語一覧を見る",
               color: Colors.grey,
             ),
+            const SizedBox(
+              height: 80.0,
+            ),
             const Text(
               "powered by Kana",
               style: TextStyle(fontFamily: "Mont"),
+            ),
+            const SizedBox(
+              height: 20.0,
             ),
           ],
         ),
@@ -60,6 +78,42 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _radioButons() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 50.0),
+      child: Column(
+        children: [
+          RadioListTile(
+            title: const Text(
+              "暗記済みの単語を除外する",
+              style: TextStyle(fontSize: 16.0),
+            ),
+            value: false,
+            groupValue: isIncludedMemorizedWord,
+            onChanged: (value) => _onRadioSelected(value),
+          ),
+          RadioListTile(
+            title: const Text(
+              "暗記済みの単語を含む",
+              style: TextStyle(fontSize: 16.0),
+            ),
+            value: true,
+            groupValue: isIncludedMemorizedWord,
+            onChanged: (value) => _onRadioSelected(value),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _onRadioSelected(value) {
+    setState(
+      () {
+        isIncludedMemorizedWord = value;
+      },
     );
   }
 }
