@@ -23,6 +23,20 @@ class MyDatabase extends _$MyDatabase {
   @override
   // TODO: implement schemaVersion
   int get schemaVersion => 1;
+
+  //Create
+  Future addWord(Word word) => into(words).insert(word);
+
+  //Read
+  Future<List<Word>> get allWords => select(words).get();
+
+  //Update
+  Future updateWord(Word word) => update(words).replace(word);
+
+  //Delete
+  Future deleteWord(Word word) =>
+      (delete(words)..where((t) => t.strQuestion.equals(word.strQuestion)))
+          .go();
 }
 
 LazyDatabase _openConnection() {
