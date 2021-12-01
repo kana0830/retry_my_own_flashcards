@@ -19,6 +19,10 @@ class Words extends Table {
 @DriftDatabase(tables: [Words])
 class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
+
+  @override
+  // TODO: implement schemaVersion
+  int get schemaVersion => 1;
 }
 
 LazyDatabase _openConnection() {
