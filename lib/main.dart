@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:retry_my_own_flashcards/db/database.dart';
 import 'package:retry_my_own_flashcards/screens/home_screen.dart';
 
-void main() => runApp(MyApp());
+late MyDatabase database;
+
+void main() {
+  database = MyDatabase();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
