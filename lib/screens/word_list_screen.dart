@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:retry_my_own_flashcards/db/database.dart';
 import 'package:retry_my_own_flashcards/main.dart';
 
@@ -73,7 +74,17 @@ class _WordListScreenState extends State<WordListScreen> {
           _wordList[position].strAnswer,
           style: const TextStyle(fontFamily: "Mont"),
         ),
+        onLongPress: () => _deleteWord(_wordList[position]),
       ),
     );
+  }
+
+  _deleteWord(Word selectedWord) async {
+    await database.deleteWord(selectedWord);
+    Fluttertoast.showToast(
+      msg: "削除が完了しました",
+      toastLength: Toast.LENGTH_LONG,
+    );
+    _getAllWords();
   }
 }
