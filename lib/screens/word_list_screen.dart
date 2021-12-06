@@ -42,7 +42,9 @@ class _WordListScreenState extends State<WordListScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => EditScreen(),
+        builder: (context) => EditScreen(
+          status: EditStatus.ADD,
+        ),
       ),
     );
   }
@@ -75,6 +77,7 @@ class _WordListScreenState extends State<WordListScreen> {
           style: const TextStyle(fontFamily: "Mont"),
         ),
         onLongPress: () => _deleteWord(_wordList[position]),
+        onTap: () => _editWord(_wordList[position]),
       ),
     );
   }
@@ -86,5 +89,17 @@ class _WordListScreenState extends State<WordListScreen> {
       toastLength: Toast.LENGTH_LONG,
     );
     _getAllWords();
+  }
+
+  _editWord(Word selectedWord) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditScreen(
+          word: selectedWord,
+          status: EditStatus.EDIT,
+        ),
+      ),
+    );
   }
 }

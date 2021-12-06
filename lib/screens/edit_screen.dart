@@ -5,8 +5,13 @@ import 'package:retry_my_own_flashcards/main.dart';
 import 'package:retry_my_own_flashcards/screens/word_list_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+enum EditStatus { ADD, EDIT }
+
 class EditScreen extends StatefulWidget {
-  const EditScreen({Key? key}) : super(key: key);
+  final EditStatus status;
+  final Word? word;
+
+  EditScreen({required this.status, this.word});
 
   @override
   _EditScreenState createState() => _EditScreenState();
