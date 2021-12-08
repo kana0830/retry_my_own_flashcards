@@ -150,7 +150,9 @@ class _EditScreenState extends State<EditScreen> {
       return;
     }
     var word = Word(
-        strQuestion: questionController.text, strAnswer: answerController.text);
+        strQuestion: questionController.text,
+        strAnswer: answerController.text,
+        isMemorized: false);
     try {
       await database.addWord(word);
       questionController.clear();
@@ -184,7 +186,9 @@ class _EditScreenState extends State<EditScreen> {
       return;
     }
     var word = Word(
-        strQuestion: questionController.text, strAnswer: answerController.text);
+        strQuestion: questionController.text,
+        strAnswer: answerController.text,
+        isMemorized: false);
     try {
       await database.updateWord(word);
       _backToWordListScreen();
