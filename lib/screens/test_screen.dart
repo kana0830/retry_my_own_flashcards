@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum TestStatus { BEFORE_START, SHOW_QUESTION, SHOW_ANSWER, FINISHED }
+
 class TestScreen extends StatefulWidget {
   final bool isIncludedMemorizedWords;
 
