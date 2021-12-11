@@ -19,6 +19,7 @@ class _TestScreenState extends State<TestScreen> {
   String _txtAnswer = "こたえ";
   bool _isMemorised = false;
   List<Word> _testDataList = [];
+  late TestStatus _testStatus;
 
   @override
   void initState() {
@@ -32,6 +33,8 @@ class _TestScreenState extends State<TestScreen> {
     } else {
       _testDataList = await database.allWordsExcludedMemorized;
     }
+    _testDataList.shuffle();
+    _testStatus = TestStatus.BEFORE_START;
     setState(() {
       _numberOfQuestion = _testDataList.length;
     });
