@@ -74,7 +74,9 @@ class _WordListScreenState extends State<WordListScreen> {
         ),
         subtitle: Text(
           _wordList[position].strAnswer,
-          style: const TextStyle(fontFamily: "Mont"),
+          style: const TextStyle(
+            fontFamily: "Mont",
+          ),
         ),
         onLongPress: () => _deleteWord(_wordList[position]),
         onTap: () => _editWord(_wordList[position]),

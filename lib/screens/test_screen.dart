@@ -15,6 +15,7 @@ class _TestScreenState extends State<TestScreen> {
   int _numberOfQuestion = 0;
   String _txtQuestion = "テスト";
   String _txtAnswer = "こたえ";
+  bool _isMemorised = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _TestScreenState extends State<TestScreen> {
       body: Column(
         children: [
           const SizedBox(
-            height: 20.0,
+            height: 80.0,
           ),
           _numberOfQuestionPart(),
           const SizedBox(
@@ -42,6 +43,9 @@ class _TestScreenState extends State<TestScreen> {
             height: 20.0,
           ),
           _answerCardPart(),
+          const SizedBox(
+            height: 40.0,
+          ),
           _isMemorizedCheckPart(),
         ],
       ),
@@ -108,6 +112,24 @@ class _TestScreenState extends State<TestScreen> {
 
   //TODO 暗記済みチェック部分
   Widget _isMemorizedCheckPart() {
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: CheckboxListTile(
+        title: const Text(
+          "暗記済みにする場合はチェックを入れて下さい",
+          style: TextStyle(
+            fontSize: 14.0,
+          ),
+        ),
+        value: _isMemorised,
+        onChanged: (value) {
+          setState(
+            () {
+              _isMemorised = value!;
+            },
+          );
+        },
+      ),
+    );
   }
 }
