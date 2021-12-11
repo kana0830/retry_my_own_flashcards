@@ -14,6 +14,7 @@ class TestScreen extends StatefulWidget {
 class _TestScreenState extends State<TestScreen> {
   int _numberOfQuestion = 0;
   String _txtQuestion = "テスト";
+  String _txtAnswer = "こたえ";
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +35,12 @@ class _TestScreenState extends State<TestScreen> {
           ),
           _numberOfQuestionPart(),
           const SizedBox(
-            height: 40.0,
+            height: 60.0,
           ),
           _questionCardPart(),
+          const SizedBox(
+            height: 20.0,
+          ),
           _answerCardPart(),
           _isMemorizedCheckPart(),
         ],
@@ -87,7 +91,19 @@ class _TestScreenState extends State<TestScreen> {
 
   //TODO こたえカード表示部分
   Widget _answerCardPart() {
-    return Container();
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Image.asset("assets/images/image_flash_answer.png"),
+        Text(
+          _txtAnswer,
+          style: const TextStyle(
+            fontSize: 20.0,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
   }
 
   //TODO 暗記済みチェック部分
