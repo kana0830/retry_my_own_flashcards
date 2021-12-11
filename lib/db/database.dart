@@ -41,6 +41,10 @@ class MyDatabase extends _$MyDatabase {
   //Read
   Future<List<Word>> get allWords => select(words).get();
 
+  //Read(暗記済み単語の除外)
+  Future<List<Word>> get allWordsExcludedMemorized =>
+      (select(words)..where((table) => table.isMemorized.equals(false))).get();
+
   //Update
   Future updateWord(Word word) => update(words).replace(word);
 

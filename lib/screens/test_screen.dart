@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:retry_my_own_flashcards/db/database.dart';
+import 'package:retry_my_own_flashcards/main.dart';
 
 enum TestStatus { BEFORE_START, SHOW_QUESTION, SHOW_ANSWER, FINISHED }
 
@@ -16,6 +18,24 @@ class _TestScreenState extends State<TestScreen> {
   String _txtQuestion = "テスト";
   String _txtAnswer = "こたえ";
   bool _isMemorised = false;
+  List<Word> _testDataList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getTestData();
+  }
+
+  void _getTestData() async {
+    if (widget.isIncludedMemorizedWords) {
+      _testDataList = await database.allWords;
+    } else {
+      _testDataList = await database.allWordsExcludedMemorized;
+    }
+    setState(() {
+      _numberOfQuestion = _testDataList.length;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,19 +84,19 @@ class _TestScreenState extends State<TestScreen> {
           ),
         ),
         const SizedBox(
-          width: 30.0,
+          width: 24.0,
         ),
         Text(
           _numberOfQuestion.toString(),
           style: const TextStyle(
-            fontSize: 20.0,
+            fontSize: 30.0,
           ),
         ),
       ],
     );
   }
 
-  //TODO 問題カード表示部分
+  //問題カード表示部分
   Widget _questionCardPart() {
     return Stack(
       alignment: Alignment.center,
@@ -93,7 +113,7 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  //TODO こたえカード表示部分
+  //こたえカード表示部分
   Widget _answerCardPart() {
     return Stack(
       alignment: Alignment.center,
@@ -110,7 +130,7 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  //TODO 暗記済みチェック部分
+  //暗記済みチェック部分
   Widget _isMemorizedCheckPart() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
