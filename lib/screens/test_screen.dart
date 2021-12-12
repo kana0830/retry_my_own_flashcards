@@ -18,6 +18,11 @@ class _TestScreenState extends State<TestScreen> {
   String _txtQuestion = "テスト";
   String _txtAnswer = "こたえ";
   bool _isMemorised = false;
+  bool _isQuestionCardVisible = false;
+  bool _isAnswerCardVisible = false;
+  bool _isCheckBoxVisible = false;
+  bool _isFabVisible = false;
+
   List<Word> _testDataList = [];
   late TestStatus _testStatus;
 
@@ -36,6 +41,10 @@ class _TestScreenState extends State<TestScreen> {
     _testDataList.shuffle();
     _testStatus = TestStatus.BEFORE_START;
     setState(() {
+      _isQuestionCardVisible = false;
+      _isAnswerCardVisible = false;
+      _isCheckBoxVisible = false;
+      _isFabVisible = true;
       _numberOfQuestion = _testDataList.length;
     });
   }
@@ -47,11 +56,13 @@ class _TestScreenState extends State<TestScreen> {
         title: const Text("かくにんテスト"),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _goNextStatus(),
-        child: const Icon(Icons.skip_next),
-        tooltip: "次にすすむ",
-      ),
+      floatingActionButton: _isFabVisible
+          ? FloatingActionButton(
+              onPressed: () => _goNextStatus(),
+              child: const Icon(Icons.skip_next),
+              tooltip: "次にすすむ",
+            )
+          : null,
       body: Column(
         children: [
           const SizedBox(
@@ -101,65 +112,78 @@ class _TestScreenState extends State<TestScreen> {
 
   //問題カード表示部分
   Widget _questionCardPart() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset("assets/images/image_flash_question.png"),
-        Text(
-          _txtQuestion,
-          style: TextStyle(
-            fontSize: 20.0,
-            color: Colors.grey[800],
+    if (_isQuestionCardVisible) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset("assets/images/image_flash_question.png"),
+          Text(
+            _txtQuestion,
+            style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.grey[800],
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
   //こたえカード表示部分
   Widget _answerCardPart() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset("assets/images/image_flash_answer.png"),
-        Text(
-          _txtAnswer,
-          style: const TextStyle(
-            fontSize: 20.0,
-            color: Colors.white,
+    if (_isAnswerCardVisible) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset("assets/images/image_flash_answer.png"),
+          Text(
+            _txtAnswer,
+            style: const TextStyle(
+              fontSize: 20.0,
+              color: Colors.white,
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
   //暗記済みチェック部分
   Widget _isMemorizedCheckPart() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: CheckboxListTile(
-        title: const Text(
-          "暗記済みにする場合はチェックを入れて下さい",
-          style: TextStyle(
-            fontSize: 14.0,
+    if (_isCheckBoxVisible) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: CheckboxListTile(
+          title: const Text(
+            "暗記済みにする場合はチェックを入れて下さい",
+            style: TextStyle(
+              fontSize: 14.0,
+            ),
           ),
+          value: _isMemorised,
+          onChanged: (value) {
+            setState(
+              () {
+                _isMemorised = value!;
+              },
+            );
+          },
         ),
-        value: _isMemorised,
-        onChanged: (value) {
-          setState(
-            () {
-              _isMemorised = value!;
-            },
-          );
-        },
-      ),
-    );
+      );
+    } else {
+      return Container();
+    }
   }
 
   _goNextStatus() {
     switch (_testStatus) {
       case TestStatus.BEFORE_START:
         _testStatus = TestStatus.SHOW_QUESTION;
+        _showQuestion();
         break;
       case TestStatus.SHOW_QUESTION:
         _testStatus = TestStatus.SHOW_ANSWER;
@@ -175,4 +199,6 @@ class _TestScreenState extends State<TestScreen> {
         break;
     }
   }
+
+  void _showQuestion() {}
 }
