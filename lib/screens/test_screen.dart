@@ -15,8 +15,8 @@ class TestScreen extends StatefulWidget {
 
 class _TestScreenState extends State<TestScreen> {
   int _numberOfQuestion = 0;
-  String _txtQuestion = "テスト";
-  String _txtAnswer = "こたえ";
+  String _txtQuestion = "";
+  String _txtAnswer = "";
   bool _isMemorised = false;
   bool _isQuestionCardVisible = false;
   bool _isAnswerCardVisible = false;
@@ -24,7 +24,7 @@ class _TestScreenState extends State<TestScreen> {
   bool _isFabVisible = false;
 
   List<Word> _testDataList = [];
-  late TestStatus _testStatus;
+  TestStatus? _testStatus;
 
   int _index = 0; //今何問目か
   late Word _currentWord;
@@ -66,24 +66,29 @@ class _TestScreenState extends State<TestScreen> {
               tooltip: "次にすすむ",
             )
           : null,
-      body: Column(
+      body: Stack(
         children: [
-          const SizedBox(
-            height: 80.0,
+          Column(
+            children: [
+              const SizedBox(
+                height: 80.0,
+              ),
+              _numberOfQuestionPart(),
+              const SizedBox(
+                height: 60.0,
+              ),
+              _questionCardPart(),
+              const SizedBox(
+                height: 20.0,
+              ),
+              _answerCardPart(),
+              const SizedBox(
+                height: 40.0,
+              ),
+              _isMemorizedCheckPart(),
+            ],
           ),
-          _numberOfQuestionPart(),
-          const SizedBox(
-            height: 60.0,
-          ),
-          _questionCardPart(),
-          const SizedBox(
-            height: 20.0,
-          ),
-          _answerCardPart(),
-          const SizedBox(
-            height: 40.0,
-          ),
-          _isMemorizedCheckPart(),
+          _endMessage(),
         ],
       ),
     );
@@ -182,6 +187,21 @@ class _TestScreenState extends State<TestScreen> {
     }
   }
 
+  Widget _endMessage() {
+    if (_testStatus == TestStatus.FINISHED) {
+      return const Center(
+        child: Text(
+          "テスト終了",
+          style: TextStyle(
+            fontSize: 50.0,
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   _goNextStatus() async {
     switch (_testStatus) {
       case TestStatus.BEFORE_START:
@@ -195,9 +215,13 @@ class _TestScreenState extends State<TestScreen> {
       case TestStatus.SHOW_ANSWER:
         await _updateMemorizedFlag();
         if (_numberOfQuestion <= 0) {
-          _testStatus = TestStatus.FINISHED;
+          setState(() {
+            _isFabVisible = false;
+            _testStatus = TestStatus.FINISHED;
+          });
         } else {
           _testStatus = TestStatus.SHOW_QUESTION;
+          _showQuestion();
         }
         break;
       case TestStatus.FINISHED:
