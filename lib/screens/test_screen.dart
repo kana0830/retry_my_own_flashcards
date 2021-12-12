@@ -182,7 +182,7 @@ class _TestScreenState extends State<TestScreen> {
     }
   }
 
-  _goNextStatus() {
+  _goNextStatus() async {
     switch (_testStatus) {
       case TestStatus.BEFORE_START:
         _testStatus = TestStatus.SHOW_QUESTION;
@@ -193,6 +193,7 @@ class _TestScreenState extends State<TestScreen> {
         _showAnswer();
         break;
       case TestStatus.SHOW_ANSWER:
+        await _updateMemorizedFlag();
         if (_numberOfQuestion <= 0) {
           _testStatus = TestStatus.FINISHED;
         } else {
@@ -220,13 +221,24 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   void _showAnswer() {
-    setState(() {
-      _isQuestionCardVisible = true;
-      _isAnswerCardVisible = true;
-      _isCheckBoxVisible = true;
-      _isFabVisible = true;
-      _txtAnswer = _currentWord.strAnswer;
-      _isMemorised = _currentWord.isMemorized;
-    });
+    setState(
+      () {
+        _isQuestionCardVisible = true;
+        _isAnswerCardVisible = true;
+        _isCheckBoxVisible = true;
+        _isFabVisible = true;
+        _txtAnswer = _currentWord.strAnswer;
+        _isMemorised = _currentWord.isMemorized;
+      },
+    );
+  }
+
+  Future<void> _updateMemorizedFlag() async {
+    var updateWord = Word(
+      strQuestion: _currentWord.strQuestion,
+      strAnswer: _currentWord.strAnswer,
+      isMemorized: _currentWord.isMemorized,
+    );
+    await database.updateWord(updateWord);
   }
 }
