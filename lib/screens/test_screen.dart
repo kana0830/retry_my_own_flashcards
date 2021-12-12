@@ -26,6 +26,9 @@ class _TestScreenState extends State<TestScreen> {
   List<Word> _testDataList = [];
   late TestStatus _testStatus;
 
+  int _index = 0; //今何問目か
+  late Word _currentWord;
+
   @override
   void initState() {
     super.initState();
@@ -187,6 +190,7 @@ class _TestScreenState extends State<TestScreen> {
         break;
       case TestStatus.SHOW_QUESTION:
         _testStatus = TestStatus.SHOW_ANSWER;
+        _showAnswer();
         break;
       case TestStatus.SHOW_ANSWER:
         if (_numberOfQuestion <= 0) {
@@ -200,5 +204,29 @@ class _TestScreenState extends State<TestScreen> {
     }
   }
 
-  void _showQuestion() {}
+  void _showQuestion() {
+    _currentWord = _testDataList[_index];
+    setState(
+      () {
+        _isQuestionCardVisible = true;
+        _isAnswerCardVisible = false;
+        _isCheckBoxVisible = false;
+        _isFabVisible = true;
+        _txtQuestion = _currentWord.strQuestion;
+      },
+    );
+    _numberOfQuestion -= 1;
+    _index += 1;
+  }
+
+  void _showAnswer() {
+    setState(() {
+      _isQuestionCardVisible = true;
+      _isAnswerCardVisible = true;
+      _isCheckBoxVisible = true;
+      _isFabVisible = true;
+      _txtAnswer = _currentWord.strAnswer;
+      _isMemorised = _currentWord.isMemorized;
+    });
+  }
 }
