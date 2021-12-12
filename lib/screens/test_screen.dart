@@ -48,7 +48,7 @@ class _TestScreenState extends State<TestScreen> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => print("FAB"), //TODO
+        onPressed: () => _goNextStatus(),
         child: const Icon(Icons.skip_next),
         tooltip: "次にすすむ",
       ),
@@ -154,5 +154,25 @@ class _TestScreenState extends State<TestScreen> {
         },
       ),
     );
+  }
+
+  _goNextStatus() {
+    switch (_testStatus) {
+      case TestStatus.BEFORE_START:
+        _testStatus = TestStatus.SHOW_QUESTION;
+        break;
+      case TestStatus.SHOW_QUESTION:
+        _testStatus = TestStatus.SHOW_ANSWER;
+        break;
+      case TestStatus.SHOW_ANSWER:
+        if (_numberOfQuestion <= 0) {
+          _testStatus = TestStatus.FINISHED;
+        } else {
+          _testStatus = TestStatus.SHOW_QUESTION;
+        }
+        break;
+      case TestStatus.FINISHED:
+        break;
+    }
   }
 }
