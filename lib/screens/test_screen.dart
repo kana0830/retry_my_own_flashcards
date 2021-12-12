@@ -261,7 +261,7 @@ class _TestScreenState extends State<TestScreen> {
     var updateWord = Word(
       strQuestion: _currentWord.strQuestion,
       strAnswer: _currentWord.strAnswer,
-      isMemorized: _currentWord.isMemorized,
+      isMemorized: _isMemorised,
     );
     await database.updateWord(updateWord);
   }

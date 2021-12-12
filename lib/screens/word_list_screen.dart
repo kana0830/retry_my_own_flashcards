@@ -25,6 +25,13 @@ class _WordListScreenState extends State<WordListScreen> {
       appBar: AppBar(
         title: const Text("単語一覧"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => _sortWords(),
+            icon: Icon(Icons.sort),
+            tooltip: "暗記済みの単語を下になるようにソート",
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addNewWord(),
@@ -78,6 +85,9 @@ class _WordListScreenState extends State<WordListScreen> {
             fontFamily: "Mont",
           ),
         ),
+        trailing: _wordList[position].isMemorized
+            ? const Icon(Icons.check_circle)
+            : null,
         onLongPress: () => _deleteWord(_wordList[position]),
         onTap: () => _editWord(_wordList[position]),
       ),
@@ -103,5 +113,10 @@ class _WordListScreenState extends State<WordListScreen> {
         ),
       ),
     );
+  }
+
+  _sortWords() async {
+    _wordList = await database.allWordsSorted;
+    setState(() {});
   }
 }

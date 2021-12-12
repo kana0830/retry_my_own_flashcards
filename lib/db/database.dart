@@ -24,31 +24,33 @@ class MyDatabase extends _$MyDatabase {
   int get schemaVersion => 2;
 
   //統合処理
-  MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (Migrator m) {
-          return m.createAll();
-        },
-        onUpgrade: (Migrator m, int from, int to) async {
-          if (from == 1) {
-            await m.addColumn(words, words.isMemorized);
-          }
-        },
-      );
+  MigrationStrategy get migration => MigrationStrategy(onCreate: (Migrator m) {
+        return m.createAll();
+      }, onUpgrade: (Migrator m, int from, int to) async {
+        if (from == 1) {
+          await m.addColumn(words, words.isMemorized);
+        }
+      });
 
-  //Create
+  //create
   Future addWord(Word word) => into(words).insert(word);
 
-  //Read
+  //read
   Future<List<Word>> get allWords => select(words).get();
 
-  //Read(暗記済み単語の除外)
+  //read(暗記済み単語除外)
   Future<List<Word>> get allWordsExcludedMemorized =>
       (select(words)..where((table) => table.isMemorized.equals(false))).get();
 
-  //Update
+  //read(暗記済みが下になるようにソート)
+  Future<List<Word>> get allWordsSorted => (select(words)
+        ..orderBy([(table) => OrderingTerm(expression: table.isMemorized)]))
+      .get();
+
+  //update
   Future updateWord(Word word) => update(words).replace(word);
 
-  //Delete
+  //delete
   Future deleteWord(Word word) =>
       (delete(words)..where((t) => t.strQuestion.equals(word.strQuestion)))
           .go();
@@ -56,13 +58,11 @@ class MyDatabase extends _$MyDatabase {
 
 LazyDatabase _openConnection() {
   // the LazyDatabase util lets us find the right location for the file async.
-  return LazyDatabase(
-    () async {
-      // put the database file, called db.sqlite here, into the documents folder
-      // for your app.
-      final dbFolder = await getApplicationDocumentsDirectory();
-      final file = File(p.join(dbFolder.path, 'words.db'));
-      return NativeDatabase(file);
-    },
-  );
+  return LazyDatabase(() async {
+    // put the database file, called db.sqlite here, into the documents folder
+    // for your app.
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, 'words.db'));
+    return NativeDatabase(file);
+  });
 }
