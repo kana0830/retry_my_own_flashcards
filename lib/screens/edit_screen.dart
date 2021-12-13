@@ -158,27 +158,54 @@ class _EditScreenState extends State<EditScreen> {
       );
       return;
     }
-    var word = Word(
-      strQuestion: questionController.text,
-      strAnswer: answerController.text,
-      isMemorized: false,
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: const Text("登録"),
+        content: const Text("登録していいですか？"),
+        actions: [
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+            ),
+            onPressed: () async {
+              var word = Word(
+                strQuestion: questionController.text,
+                strAnswer: answerController.text,
+                isMemorized: false,
+              );
+              try {
+                await database.addWord(word);
+                questionController.clear();
+                answerController.clear();
+                Fluttertoast.showToast(
+                  msg: "登録が完了しました",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              } on SqliteException catch (e) {
+                Fluttertoast.showToast(
+                  msg: "この問題はすでに登録されていますので登録できません。",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              } finally {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("はい"),
+          ),
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+            ),
+            onPressed: () => Navigator.pop(context),
+            child: const Text("いいえ"),
+          ),
+        ],
+      ),
     );
-    try {
-      await database.addWord(word);
-      questionController.clear();
-      answerController.clear();
-      Fluttertoast.showToast(
-        msg: "登録が完了しました",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
-    } on SqliteException catch (e) {
-      Fluttertoast.showToast(
-        msg: "この問題はすでに登録されていますので登録できません。",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
-    }
   }
 
   _onWordRegistered() {
@@ -198,26 +225,52 @@ class _EditScreenState extends State<EditScreen> {
       );
       return;
     }
-    var word = Word(
-      strQuestion: questionController.text,
-      strAnswer: answerController.text,
-      isMemorized: false,
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: Text("${questionController.text}の変更"),
+        content: const Text("変更してもいいですか？"),
+        actions: [
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+            ),
+            onPressed: () async {
+              var word = Word(
+                strQuestion: questionController.text,
+                strAnswer: answerController.text,
+                isMemorized: false,
+              );
+              try {
+                await database.updateWord(word);
+                Navigator.pop(context);
+                _backToWordListScreen();
+                Fluttertoast.showToast(
+                  msg: "修正が完了しました。",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              } on SqliteException catch (e) {
+                Fluttertoast.showToast(
+                  msg: "何らかの問題が発生して登録できませんでした。 :$e",
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                );
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("はい"),
+          ),
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+            ),
+            onPressed: () => Navigator.pop(context),
+            child: const Text("いいえ"),
+          ),
+        ],
+      ),
     );
-    try {
-      await database.updateWord(word);
-      _backToWordListScreen();
-      Fluttertoast.showToast(
-        msg: "修正が完了しました。",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
-    } on SqliteException catch (e) {
-      Fluttertoast.showToast(
-        msg: "何らかの問題が発生して登録できませんでした。 :$e",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
-      return;
-    }
   }
 }
